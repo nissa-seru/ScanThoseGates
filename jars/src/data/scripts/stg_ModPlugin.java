@@ -21,8 +21,8 @@ public class stg_ModPlugin extends BaseModPlugin {
         boolean haveSkipStory = Global.getSettings().getModManager().isModEnabled("skipStory");
         if (haveNexerelin || haveSkipStory) {
             boolean activateThoseGates = false;
-            if (haveNexerelin) { activateThoseGates = ExerelinSetupData.getInstance().skipStory; }
-            if (haveSkipStory) { activateThoseGates = true; }
+            if (haveNexerelin) { activateThoseGates = ExerelinSetupData.getInstance().skipStory; } //check for Nex before variable to avoid crash
+            if (haveSkipStory) { activateThoseGates = true; } //otherwise, set true if Skip Story is enabled
             if (activateThoseGates) {
                 for (SectorEntityToken gate : Global.getSector().getCustomEntitiesWithTag(Tags.GATE)) {
                     try {

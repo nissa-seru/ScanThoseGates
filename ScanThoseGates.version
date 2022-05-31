@@ -1,0 +1,13 @@
+{
+	"masterVersionFile":"https://raw.githubusercontent.com/AEROassault/ScanThoseGates/master/ScanThoseGates.version",
+	"modName":"Scan Those Gates",
+	"modThreadId":24651,
+	"modVersion":
+	{
+		"major":1,
+		"minor":3,
+		#"patch":,
+	},
+	"starsectorVersion":"0.95.1a-RC6",
+	"directDownloadURL":"https://github.com/AEROassault/ScanThoseGates/releases/download/1.3/ScanThoseGates.zip",
+}

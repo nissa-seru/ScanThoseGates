@@ -1,4 +1,4 @@
-package data.scripts;
+package ScanThoseGates.scripts;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;

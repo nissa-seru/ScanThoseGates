@@ -1,5 +1,6 @@
-package data.campaign.econ.abilities;
+package ScanThoseGates.campaign.econ.abilities;
 
+import ScanThoseGates.campaign.intel.CryosleeperIntel;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -9,14 +10,13 @@ import com.fs.starfarer.api.impl.campaign.abilities.BaseDurationAbility;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import data.campaign.intel.CryosleeperIntel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 
 public class CryosleeperScanner extends BaseDurationAbility {
     public static String CAN_SCAN_CRYOSLEEPERS = "$CryosleeperScannerAllowed";
-    private static final Logger log = Global.getLogger(data.campaign.econ.abilities.CryosleeperScanner.class);
+    private static final Logger log = Global.getLogger(CryosleeperScanner.class);
     static {log.setLevel(Level.ALL);}
 
     @Override
@@ -28,7 +28,7 @@ public class CryosleeperScanner extends BaseDurationAbility {
     protected void applyEffect(float amount, float level) {
         if (Global.getSector().getMemoryWithoutUpdate().getBoolean(CAN_SCAN_CRYOSLEEPERS)){
             for (SectorEntityToken cryosleeper : Global.getSector().getCustomEntitiesWithTag(Tags.CRYOSLEEPER)){
-                if (tryCreateCryosleeperReportCustom(cryosleeper, log, true)
+                if (tryCreateCryosleeperReportCustom(cryosleeper, log, true, false)
                         && Global.getSector().getMemoryWithoutUpdate().getBoolean(CAN_SCAN_CRYOSLEEPERS)){
                     Global.getSector().getMemoryWithoutUpdate().set(CAN_SCAN_CRYOSLEEPERS, false);
                 }
@@ -70,7 +70,11 @@ public class CryosleeperScanner extends BaseDurationAbility {
         addIncompatibleToTooltip(tooltip, expanded);
     }
 
-    public static boolean tryCreateCryosleeperReportCustom(SectorEntityToken cryosleeper, Logger log, boolean showMessage) {
+    public static boolean tryCreateCryosleeperReportCustom(SectorEntityToken cryosleeper, Logger log, boolean showMessage, boolean listener) {
+        if ((!cryosleeper.hasTag(Tags.CRYOSLEEPER) || cryosleeper.hasSensorProfile() || cryosleeper.isDiscoverable()) && listener){
+            return false;
+        }
+
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
         for (IntelInfoPlugin intel : intelManager.getIntel(CryosleeperIntel.class)) {
             CryosleeperIntel cs = (CryosleeperIntel) intel;

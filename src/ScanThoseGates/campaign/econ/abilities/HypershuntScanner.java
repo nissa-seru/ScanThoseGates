@@ -1,5 +1,6 @@
-package data.campaign.econ.abilities;
+package ScanThoseGates.campaign.econ.abilities;
 
+import ScanThoseGates.campaign.intel.CoronalHypershuntIntel;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -9,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.abilities.BaseDurationAbility;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import data.campaign.intel.CoronalHypershuntIntel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class HypershuntScanner extends BaseDurationAbility {
     public static String CAN_SCAN_HYPERSHUNTS = "$HypershuntScannerAllowed";
 
-    private static final Logger log = Global.getLogger(data.campaign.econ.abilities.HypershuntScanner.class);
+    private static final Logger log = Global.getLogger(HypershuntScanner.class);
     static {log.setLevel(Level.ALL);}
 
     @Override
@@ -29,7 +29,7 @@ public class HypershuntScanner extends BaseDurationAbility {
     protected void applyEffect(float amount, float level) {
         if (Global.getSector().getMemoryWithoutUpdate().getBoolean(CAN_SCAN_HYPERSHUNTS)){
             for (SectorEntityToken hypershunt : Global.getSector().getCustomEntitiesWithTag(Tags.CORONAL_TAP)){
-                if (tryCreateHypershuntReport(hypershunt, log, true)
+                if (tryCreateHypershuntReport(hypershunt, log, true, false)
                         && Global.getSector().getMemoryWithoutUpdate().getBoolean(CAN_SCAN_HYPERSHUNTS)){
                     Global.getSector().getMemoryWithoutUpdate().set(CAN_SCAN_HYPERSHUNTS, false);
                 }
@@ -72,7 +72,11 @@ public class HypershuntScanner extends BaseDurationAbility {
         addIncompatibleToTooltip(tooltip, expanded);
     }
 
-    public static boolean tryCreateHypershuntReport(SectorEntityToken hypershunt, Logger log, boolean showMessage) {
+    public static boolean tryCreateHypershuntReport(SectorEntityToken hypershunt, Logger log, boolean showMessage, boolean listener) {
+        if ((!hypershunt.hasTag(Tags.CORONAL_TAP) || hypershunt.hasSensorProfile() || hypershunt.isDiscoverable()) && listener){
+            return false;
+        }
+
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
         for (IntelInfoPlugin intel : intelManager.getIntel(CoronalHypershuntIntel.class)) {
             CoronalHypershuntIntel hs = (CoronalHypershuntIntel) intel;

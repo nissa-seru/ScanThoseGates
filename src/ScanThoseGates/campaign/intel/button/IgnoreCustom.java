@@ -1,8 +1,8 @@
-package data.campaign.intel.button;
+package ScanThoseGates.campaign.intel.button;
 
+import ScanThoseGates.campaign.intel.CustomMessageIntel;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import data.campaign.intel.CustomMessageIntel;
 import org.lwjgl.input.Keyboard;
 
 public class IgnoreCustom implements IntelButton {

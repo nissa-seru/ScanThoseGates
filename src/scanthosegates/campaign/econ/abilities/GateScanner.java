@@ -19,8 +19,8 @@ import org.apache.log4j.Logger;
 import java.util.HashSet;
 
 import static java.lang.Math.pow;
-import static scanthosegates.ModPlugin.ActivateAllGates;
-import static scanthosegates.ModPlugin.RevealAllGates;
+import static scanthosegates.ScannerModPlugin.ActivateAllGates;
+import static scanthosegates.ScannerModPlugin.RevealAllGates;
 
 public class GateScanner extends BaseDurationAbility {
     public static String UNSCANNED_GATES = "$UnscannedGatesFound";
@@ -62,7 +62,7 @@ public class GateScanner extends BaseDurationAbility {
                     revealThatGate = true;
                 } finally {
                     try {
-                        if (!doesGateIntelExist(gate)) {
+                        if (gateIntelDoesNotExist(gate)) {
                             if (RevealAllGates) {
                                 Global.getSector().getIntelManager().addIntel(new GateIntel(gate));
                             } else if (revealThatGate) {
@@ -153,14 +153,14 @@ public class GateScanner extends BaseDurationAbility {
         addIncompatibleToTooltip(tooltip, expanded);
     }
 
-    public boolean doesGateIntelExist(SectorEntityToken gate) {
+    public boolean gateIntelDoesNotExist(SectorEntityToken gate) {
         for (IntelInfoPlugin intel : Global.getSector().getIntelManager().getIntel(GateIntel.class)){
             GateIntel gi = (GateIntel) intel;
             if (gi.getGate() == gate) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public HashSet<LocationAPI> generateMarketSystemsHashset() {
@@ -184,7 +184,7 @@ public class GateScanner extends BaseDurationAbility {
                 if (ActivateAllGates) {
                     Global.getSector().getMemoryWithoutUpdate().set(UNSCANNED_GATES, true);
                     return;
-                } else if (RevealAllGates) {
+                } else if (RevealAllGates && gateIntelDoesNotExist(gate)) {
                     Global.getSector().getMemoryWithoutUpdate().set(UNSCANNED_GATES, true);
                     return;
                 } else if (systemsWithMarkets.contains(gate.getContainingLocation())) {

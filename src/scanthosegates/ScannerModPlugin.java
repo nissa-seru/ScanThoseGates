@@ -15,16 +15,19 @@ import scanthosegates.campaign.listeners.SalvagingListener;
 
 import java.util.MissingResourceException;
 
-public class ModPlugin extends BaseModPlugin {
-    private static final Logger log = Global.getLogger(ModPlugin.class);
+import static scanthosegates.LunaSettingsChangedListener.addToManagerIfNeeded;
+
+public class ScannerModPlugin extends BaseModPlugin {
+    private static final Logger log = Global.getLogger(ScannerModPlugin.class);
     static {log.setLevel(Level.ALL);}
     public static final String ID = "scan_those_gates";
-    public static final String PREFIX = "stg_";
-    static final String LUNALIB_ID = "lunalib";
+    public static final String MOD_PREFIX = "stg_";
     public static final String INTEL_MEGASTRUCTURES = "Megastructures";
+    public static boolean lunaLibEnabled = Global.getSettings().getModManager().isModEnabled("lunalib");
+
     static <T> T get(String id, Class<T> type) throws Exception {
-        if (Global.getSettings().getModManager().isModEnabled(LUNALIB_ID)) {
-            if (type == Boolean.class) return type.cast(LunaSettings.getBoolean(ModPlugin.ID, PREFIX + id));
+        if (lunaLibEnabled) {
+            if (type == Boolean.class) return type.cast(LunaSettings.getBoolean(ScannerModPlugin.ID, MOD_PREFIX + id));
         } else {
             if (type == Boolean.class) return type.cast(Global.getSettings().getBoolean(id));
         }
@@ -39,9 +42,9 @@ public class ModPlugin extends BaseModPlugin {
             log.debug("Failed to read lunaSettings. Exception: " + e);
         }
     }
-    public static boolean
-            RevealAllGates = false,
-            ActivateAllGates = false;
+
+    public static boolean RevealAllGates = false;
+    public static boolean ActivateAllGates = false;
 
     @Override
     public void onGameLoad(boolean newGame){
@@ -70,12 +73,14 @@ public class ModPlugin extends BaseModPlugin {
 
         Global.getSector().getListenerManager().addListener(new RelocationListener(), true);
         Global.getSector().getListenerManager().addListener(new SalvagingListener(), true);
+
+        readSettings();
     }
 
     @Override
-    public void onApplicationLoad() {
-        if (Global.getSettings().getModManager().isModEnabled(LUNALIB_ID)) {
-            LunaSettings.addSettingsListener(new LunaSettingsChangedListener());
+    public void onApplicationLoad() throws Exception {
+        if (lunaLibEnabled){
+            addToManagerIfNeeded();
         }
     }
 }

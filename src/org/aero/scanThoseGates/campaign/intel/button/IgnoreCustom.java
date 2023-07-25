@@ -1,9 +1,9 @@
-package scanthosegates.campaign.intel.button;
+package org.aero.scanThoseGates.campaign.intel.button;
 
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import org.aero.scanThoseGates.campaign.intel.CustomMessageIntel;
 import org.lwjgl.input.Keyboard;
-import scanthosegates.campaign.intel.CustomMessageIntel;
 
 public class IgnoreCustom implements IntelButton {
 

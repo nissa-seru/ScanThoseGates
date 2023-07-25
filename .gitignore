@@ -1,4 +1,15 @@
-# Project exclude paths
-/out/
-/.github
-/.run
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# User-specific stuff
+/.idea
+
+# IntelliJ
+out/
+/.run/
+/*.iml
+
+# Cache file creation bug
+# See https://youtrack.jetbrains.com/issue/JBR-2257
+.idea/$CACHE_FILE$

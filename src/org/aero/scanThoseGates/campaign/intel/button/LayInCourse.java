@@ -1,18 +1,17 @@
-package scanthosegates.campaign.intel.button;
+package org.aero.scanThoseGates.campaign.intel.button;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import org.lwjgl.input.Keyboard;
-import scanthosegates.campaign.intel.CustomMessageIntel;
 
-public class ToggleCustom implements IntelButton {
+public class LayInCourse implements IntelButton {
 
-    private final boolean showOnMap;
-    private final CustomMessageIntel intel;
+    private final SectorEntityToken target;
 
-    public ToggleCustom(boolean showOnMap, CustomMessageIntel intel) {
-        this.showOnMap = showOnMap;
-        this.intel = intel;
+    public LayInCourse(SectorEntityToken target) {
+        this.target = target;
     }
 
     @Override
@@ -20,8 +19,7 @@ public class ToggleCustom implements IntelButton {
 
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
-        intel.toggleShow();
-        ui.recreateIntelUI();
+        Global.getSector().layInCourseFor(target);
     }
 
     @Override
@@ -34,11 +32,11 @@ public class ToggleCustom implements IntelButton {
 
     @Override
     public String getName() {
-        return showOnMap ? "Hide On Map" : "Show On Map";
+        return "Lay In Course";
     }
 
     @Override
     public int getShortcut() {
-        return Keyboard.KEY_M;
+        return Keyboard.KEY_L;
     }
 }
